@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link crossorigin="anonymous" href=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity=
+    "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel=
+    "stylesheet">
+    <script src="{{url_for('static',filename='js/script.js')}}">
+    </script>
+    <script src="{{url_for('static',filename='js/jquery-3.1.1.min.js')}}">
+    </script>
+    <script>
+      $(document).ready(function(){
+          $("#click_information").click(function(){
+              $("#information").slideDown("slow");
+          });
+      });
+    </script>
+    <title>{{ file.file_info_main.name }}</title>
+</head>
+<body>
+    <div class="main">
+        <h1>{{ file.file_info_main.name }}</h1>
+        <div id="click_information"> Click For Information </div>
+        <div id="information">
+          <ul>
+              <li style="list-style: none">{% for file_version in
+              file.revisions_of_file %}</li>
+              <li>Version Number: {{file_version.version_num}}</li>
+              <li style="list-style: none"><br></li>
+              <li>Author: {{file_version.author}}</li>
+              <li style="list-style: none"><br></li>
+              <li>Date: {{file_version.date}}</li>
+              <li style="list-style: none"><br></li>
+              <li>Commit Message: {{file_version.message}}</li>
+              <li style="list-style: none"><br>
+              <br>
+              {% endfor %}</li>
+          </ul>
+        </div>  
+        <iframe height="80%" src=
+        "https://subversion.ews.illinois.edu/svn/fa16-cs242/ashekar2/{{file.file_info_main.name}}"
+        width="80%"></iframe>
+        <div style="margin-left: 2em">
+            {% for comment in comments recursive %}
+            <div class="comment_data">
+                <div class="inner_data">
+                    {{ comment.user_name}}<br>
+                    {{ comment.comment }}<br>
+                </div>
+            </div>
+            <div class='comment_area' id="comm_area{{ comment.comment_id }}">
+                <form action=
+                "{{url_for('add_comment',file_name=file.file_info_main.name)}}"
+                method="post">
+                    Username:<br>
+                    <input name='name' type='text'><br>
+                    Comment:<br>
+                    <textarea id='text_area' name='comment'></textarea><br>
+                    <input name="comment_id" type="hidden" value=
+                    "{{ comment.comment_id }}"> <input class='submit_button'
+                    id='submit_button' type="submit" value='Submit'>
+                </form>
+            </div>
+            <button class="reply_button" id=
+            "button{{ comment.comment_id }}" onclick=
+            "display({{ comment.comment_id }})" type="button">Reply</button>
+            <div style="margin-left: 2em">
+                {{ loop(comment.children) }}
+            </div>{%endfor%}
+        </div>
+        <div class='main_form'>
+            <form action=
+            "{{url_for('add_comment',file_name=file.file_info_main.name)}}"
+            method="post">
+                Username:<br>
+                <input id='name' name='name' type='text'><br>
+                Comment:<br>
+                <textarea id='comment' name='comment'></textarea><br>
+                <input name="comment_id" type="hidden" value="-1">
+                <input class='submit_button' type='submit' value='Submit'>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="{{url_for('static',filename='js/script.js')}}"></script>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <title>Social Graph</title>
+</head>
+<body>
+    <h1> Social Graph </h1>
+    <div class='main_sign_up'>
+        <div class='invalid'> Please enter valid username and stronger password </div>
+        <form action="{{url_for('sign_up_post')}}" method="post">
+            First Name:<br>
+            <input name='first_name' type='text'><br>
+            Last Name:<br>
+            <input name='last_name' type='text'><br>
+            Username:<br>
+            <input name='user_name' type='text'><br>
+            Email ID:<br>
+            <input name='email_id' type='text'><br>
+            Password:<br>
+            <input name='password' type='text'><br>
+            <input class='sign_up_button' id='sign_up' type="submit" value='Sign Up'>
+        </form>
+    </div>
+</body>
