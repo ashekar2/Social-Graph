@@ -9,27 +9,155 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Social Graph</title>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css"> -->
 </head>
-<body>
+<body class='all'>
     <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Poke</a>
+      <a class="navbar-brand" href="#">{{user.user_name}}</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="{{user.user_name}}">Home</a></li>
+      <li class="active"><a href="{{user.user_name}}/home">Home</a></li>
       <li><a href="{{user.user_name}}/my_pokes">My Pokes</a></li>
-      <li><a href="#">Global Pokes</a></li>
-      <li><a href="#">Friends Pokes</a></li>
+      <li><a href="{{user.user_name}}/global_pokes">Global Pokes</a></li>
+      <li><a href="{{user.user_name}}/friends_pokes">Friends Pokes</a></li>
+      <li><a href="{{user.user_name}}/groups">Groups</a></li>
+      <li><a><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Create Poke</button></a></li>
+      <li><a><button type="button" class="btn btn-info" data-toggle="modal" data-target="#addfollow">Follow</button></a></li>
     </ul>
   </div>
-</nav>
-    <h2> Welcome {{user.first_name}}
-    <div class='user_info'>
-        <ul>
-            <li>Name: {{user.first_name}} {{user.last_name}}</li>
-            <li>User Name: {{user.user_name}}</li>
-            <li>Email ID: {{user.email_id}}</li>
-        </ul>
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create Poke</h4>
+      </div>
+      
+      <div class='main_form'>
+        <form action="{{url_for('add_comment_homepoke',comment_owner=user.user_name)}}"method="post">
+            Visible To:<br>
+            <input id='names' name='names' type='text' value='username'><br>
+            Comment:<br>
+            <textarea id='comment' name='comment' value='comment'></textarea><br>
+            <input class='submit_button' type='submit' value='Submit'>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
+
+  </div>
+</div>
+
+
+<div id="addfollow" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"></button>
+        <h4 class="modal-title">Follow</h4>
+      </div>
+      
+      <div class='main_form follow_form'>
+        <form action="{{url_for('add_follows_homepoke')}}"method="post">
+            Username:<br>
+            <input id='f_name' name='f_name' type='text' value='username'><br>
+            <input id='username' name='username' type='hidden' value="{{ user.user_name }}"><br>
+            <input class='submit_button' type='submit' value='Submit'>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id='add_follow_button' data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</nav>
+  <div class='recos'>
+    <h4> Follow Feed </h4>
+    {% for k,v in follows.iteritems() %}
+      <div class='comment_data'>
+        <b>{{k}}</b>
+        <br>
+        {% for post in v %}
+          {{ post }}
+          </br>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </br>
+</div>
+  <div class='recos'>
+    <h4> Follow Recomendations: </h4>
+    {% for reco in follow_recos %}
+      <div class='comment_data'>
+        <b>{{reco[0]}}</b>
+        </br>
+        You have {{reco[1]}} friends in common.
+        </br>
+      </div>
+    {% endfor %}
+    {% if follow_recos == [] %}
+    No friend suggestions! You seem to be very connected :)
+    </br>
+    {% endif %}
+  </div>
+  <div class='recos'>
+  <h4> Find shortest path between you and another user: </h4></br>
+    <form action="{{url_for('handle_shortest_path')}}"method="post">
+            Enter Friend Username:<br>
+            <input id='f_name' name='f_name' type='text' value='username'><br>
+            <input id='username' name='username' type='hidden' value="{{ user.user_name }}"><br>
+            <input class='submit_button' type='submit' value='Submit' id='shortest_path_button'>
+    </form>
+  <div class='shortest'>
+    {% if path != None %}
+      {% for p in path %}
+        <div class='r'><h2>{{p}}</h2></div>
+
+      {% endfor %}
+    {% endif %}
+    {% if path == None %}
+    Sorry! There is no connection between you and your input user!
+    </br>
+    {% endif %}
+  </div>
+  </div>
+
+<div class='recos'>
+  <h4> Search for users by Username </h4></br>
+    <form action="{{url_for('handle_search_username')}}"method="post">
+            Enter Username:<br>
+            <input id='prefix' name='prefix' type='text' value='username'><br>
+            <input id='username' name='username' type='hidden' value="{{ user.user_name }}"><br>
+            <input class='submit_button' type='submit' value='Submit' id='search_username_button'>
+    </form>
+    <div class='shortest'>
+    {% if possible_words != None %}
+      {% for w in possible_words %}
+        <div class='r'><h2>{{w}}</h2></div>
+
+      {% endfor %}
+    {% endif %}
+    {% if possible_words == [] %}
+    Sorry! There are no combination for the given input!
+    </br>
+    {% endif %}
+  </div>
+  </div>
+
+  </br>
+  </br>
 </body>

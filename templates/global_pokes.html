@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="{{url_for('static',filename='js/script.js')}}"></script>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Social Graph</title>
+</head>
+<body class='all'>
+    <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">{{user.user_name}}</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="{{user.user_name}}/home">Home</a></li>
+      <li><a href="{{user.user_name}}/my_pokes">My Pokes</a></li>
+      <li><a href="{{user.user_name}}/global_pokes">Global Pokes</a></li>
+      <li><a href="{{user.user_name}}/friends_pokes">Friends Pokes</a></li>
+      <li><a href="{{user.user_name}}/groups">Groups</a></li>
+      <li><a><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Create Poke</button></a></li>
+    </ul>
+  </div>
+</nav>
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create Poke</h4>
+      </div>
+      
+      <div class='main_form'>
+        <form action="{{url_for('add_comment_globalpoke', comment_owner=user.user_name)}}"method="post">
+            Visible To:<br>
+            <input id='names' name='names' type='text'><br>
+            Comment:<br>
+            <textarea id='comment' name='comment'></textarea><br>
+            <input class='submit_button' type='submit' value='Submit'>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% for comment in comments %}
+    <div class='comment_data'>
+      <b>{{comment.owner}}</b>: {{comment.text}}
+    <br>
+    {% for response in comment.reponses %}
+      <div class='resp'>{{ response[1] }} : {{ response[0] }}</div>
+    {% endfor %}
+    <form action="{{url_for('add_comment_globalresponse')}}"method="post">
+            <input id='parent_id' name='parent_id' type='hidden' value='{{ comment.id }}'>
+            <input id='comment_owner' name='comment_owner' type='hidden' value='{{ comment.owner }}'>
+            <input id='response_owner' name='response_owner' type='hidden' value='{{ user.user_name }}'><br>
+            <div class='replybutton'> Reply: <input id='response' name='response'></br> </div>
+            <input class='submit_button' type='submit' value='Submit' id='add_response_button'>
+    </form>
+  </div>
+{% endfor %}
+
+</body>

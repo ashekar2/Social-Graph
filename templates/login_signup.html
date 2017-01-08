@@ -16,11 +16,21 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
     </script>
 </head>
-<body id='back'>
-    <h2>Social Graph</h2>
+<body >
+    <video playsinline autoplay muted loop poster="back.jpg" id="bgvid">
+    <source src="polina.webm" type="video/webm">
+    <source src="b.mp4" type="video/mp4">
+    </video>
+
+    <div id='bk'>
+    <div class='wrapper'>
+        <div class='heading'>Social Graph</div>
+    </div>
     <div class="container">
         <!-- Trigger the modal with a button -->
-        <button class="btn btn-info btn-lg" data-target="#myModal" data-toggle="modal" type="button"> Login</button> <!-- Modal -->
+        <div class="wrapper">
+            <button class="btn btn-info btn-lg center" data-target="#myModal" data-toggle="modal" type="button"> Login</button>
+        </div>
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
@@ -51,7 +61,9 @@
 
     <div class="container">
         <!-- Trigger the modal with a button -->
-        <button class="btn btn-info btn-lg" data-target="#myModal1" data-toggle="modal" type="button">Sign Up</button> <!-- Modal -->
+        <div class="wrapper">
+            <button class="btn btn-info btn-lg center1" data-target="#myModal1" data-toggle="modal" type="button">Sign Up</button>
+        </div>
         <div class="modal fade" id="myModal1" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
@@ -84,5 +96,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
