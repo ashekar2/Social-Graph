@@ -41,7 +41,7 @@ def validate_unique_username(username):
     """
     Function that checks for unique username
     :param username: Username
-    :return: True if valid username
+    :return: True if valid given username
     """
     if username_check(username) == False:
         return False
