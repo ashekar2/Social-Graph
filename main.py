@@ -40,7 +40,7 @@ def validate_login(username, password):
 def validate_unique_username(username):
     """
     Function that checks for unique username
-    :param username: Username
+    :param username: Username for user
     :return: True if valid given username
     """
     if username_check(username) == False:
